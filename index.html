@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ankush - WebAuthN</title>
+    <script src="https://cdn.jsdelivr.net/npm/cbor-js@0.1.0/cbor.min.js"></script>
+    <script src="script.js"></script>
+</head>
+
+<body>
+    <form>
+        <h4>Params:</h4>
+        <div>
+            <label for="input-relying-party">Relying Party: </label>
+            <input type="text" name="input-relying-party" id="input-relying-party" value="Cipher CIAM" />
+            <select name="input-attestation-preference" id="input-attestation-preference">
+                <option value="none">none</option>
+                <option value="direct" selected>direct</option>
+                <option value="indirect">indirect</option>
+                <option value="enterprise">enterprise</option>
+            </select>
+        </div>
+    </form>
+    <br>
+    <hr>
+    <br>
+    <form>
+        <h4>Inputs:</h4>
+        <div>
+            <label for="input-user-id">User ID: </label>
+            <input type="text" id="input-user-id" value="1001" />
+        </div>
+        <div>
+            <label for="input-user-name">Username: </label>
+            <input type="text" id="input-user-name" value="ankush" />
+        </div>
+        <br>
+        <div>
+            <button type="button" id="register-button" onclick="registration()">Register</button>
+            <button id="login-button" type="button" onclick="authentication()">Authenticate</button>
+        </div>
+    </form>
+    <hr>
+    <div>
+        <p id="textid"></p>
+    </div>
+</body>
+
+</html>
