@@ -18,6 +18,7 @@ const getRelyingParty = () => {
     return {
         name: document.querySelector("#input-relying-party").value,
         id: (window.location.host).includes('localhost') ? 'localhost' : window.location.host,
+        // id: 'surge.sh'
     };
 };
 const getUser = () => {
