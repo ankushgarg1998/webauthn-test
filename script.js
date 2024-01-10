@@ -14,6 +14,11 @@ const PUBLIC_KEY_CREDENTIAL_PARAMETERS = [
     { alg: -258, type: "public-key" },
     { alg: -259, type: "public-key" },
 ];
+let credentialResult = {};
+let assertionResult = {};
+const setTableCellJson = (id, data) => {
+    document.querySelector(`#${id}`).innerHTML = '<pre>' + JSON.stringify(data, undefined, 2) + '</pre>';
+}
 const getRelyingParty = () => {
     return {
         name: document.querySelector("#input-relying-party").value,
@@ -93,39 +98,47 @@ const parseAuthenticatorData = function (decodedAttestationObject) {
     const publicKeyObject = CBOR.decode(publicKeyBytes.buffer);
     console.log(`publicKeyObject:`);
     console.log(publicKeyObject)
+    credentialResult.publicKeyObject = publicKeyObject;
 };
 
 const parseCredential = function (credential) {
     console.log(`CREDENTIAL:`);
     console.log(credential);
+    credentialResult.credential = credential;
+    console.log(credentialResult.credential);
     console.log(`getClientExtensionResults:`);
     console.log(credential.getClientExtensionResults());
+    credentialResult.extensions = credential.getClientExtensionResults();
 
     const utf8Decoder = new TextDecoder('utf-8');
     const decodedClientData = utf8Decoder.decode(credential.response.clientDataJSON);
     const clientDataObj = JSON.parse(decodedClientData);
     console.log(`clientDataJSON:`);
     console.log(clientDataObj);
-
+    credentialResult.clientDataJSON = clientDataObj;
 
     const decodedAttestationObj = CBOR.decode(credential.response.attestationObject);
     console.log(`attestationObject:`);
     console.log(decodedAttestationObj);
+    credentialResult.attestationObject = decodedAttestationObj;
     return decodedAttestationObj;
 };
 
 const parseAssertion = function (assertion) {
     console.log(`ASSERTION:`);
     console.log(assertion);
+    assertionResult.assertion = assertion;
 
     console.log(`getClientExtensionResults:`);
     console.log(assertion.getClientExtensionResults());
+    assertionResult.extensions = assertion.getClientExtensionResults();
 
     const utf8Decoder = new TextDecoder('utf-8');
     const decodedClientData = utf8Decoder.decode(assertion.response.clientDataJSON);
     const clientDataObj = JSON.parse(decodedClientData);
     console.log(`clientDataJSON:`);
     console.log(clientDataObj);
+    assertionResult.clientDataJSON = clientDataObj;
 };
 // --- ---
 
@@ -148,30 +161,76 @@ const getAssertion = async (publicKeyCredentialRequestOptions) => {
 
 
 // --- CONTROLLER FUNCTIONS ---
+const init = () => {
+    credentialResult = {};
+    assertionResult = {};
+    document.querySelector("#table-options").innerHTML = "";
+    document.querySelector("#table-credential").innerHTML = "";
+    document.querySelector("#table-extensions").innerHTML = "";
+    document.querySelector("#table-client-data-json").innerHTML = "";
+    document.querySelector("#table-attestation-object").innerHTML = "";
+    document.querySelector("#table-public-key").innerHTML = "";
+    document.querySelector("#table-options").innerHTML = "";
+    document.querySelector("#table-assertion").innerHTML = "";
+    document.querySelector("#table-extensions").innerHTML = "";
+    document.querySelector("#table-client-data-json").innerHTML = "";
+    document.querySelector("#table").style.display = "none";
+};
+
+const displayPopulatedRows = () => {
+    [...document.querySelector("#table").children[1].children].forEach(tr => {
+        if (!tr.children[1].innerHTML)
+            tr.style.display = "none";
+    });
+    document.querySelector("#table").style.display = "block";
+}
+
+const populateTable = (ceremony) => {
+    if (ceremony === 'registration') {
+        setTableCellJson('table-options', credentialResult.options);
+        setTableCellJson('table-credential', credentialResult.credential);
+        setTableCellJson('table-extensions', credentialResult.extensions);
+        setTableCellJson('table-client-data-json', credentialResult.clientDataJSON);
+        setTableCellJson('table-attestation-object', credentialResult.attestationObject);
+        setTableCellJson('table-public-key', credentialResult.publicKeyObject);
+    } else if (ceremony === 'authentication') {
+        setTableCellJson('table-options', assertionResult.options);
+        setTableCellJson('table-assertion', assertionResult.assertion);
+        setTableCellJson('table-extensions', assertionResult.extensions);
+        setTableCellJson('table-client-data-json', assertionResult.clientDataJSON);
+    }
+    displayPopulatedRows();
+};
+
 const registration = async () => {
+    init();
     console.log(`--- Registration Start ---`);
     const publicKeyCredentialCreationOptions = getPublicKeyCredentialCreationOptions();
     console.log(`OPTIONS:`);
     console.log(publicKeyCredentialCreationOptions);
+    credentialResult.options = publicKeyCredentialCreationOptions;
 
     const credential = await getCredential(publicKeyCredentialCreationOptions);
     const decodedAttestationObj = parseCredential(credential);
     parseAuthenticatorData(decodedAttestationObj);
-    console.log(`--- Registration End ---`);
-
-    document.getElementById("textid").innerHTML = JSON.stringify(decodedAttestationObj);
     addToLocalStorage(credential.id);
-}
+    populateTable('registration');
+};
 
 const authentication = async () => {
+    init();
     console.log(`--- Authentication Start ---`);
     const credentialIDs = getFromLocalStorage();
     const publicKeyCredentialRequestOptions = getPublicKeyCredentialRequestOptions(credentialIDs);
     console.log(`OPTIONS:`);
     console.log(publicKeyCredentialRequestOptions);
+    assertionResult.options = publicKeyCredentialRequestOptions;
 
     const assertion = await getAssertion(publicKeyCredentialRequestOptions);
     parseAssertion(assertion);
     console.log(`--- Authentication End ---`);
-}
+    populateTable('authentication');
+};
 // --- ---
+
+init();
