@@ -17,7 +17,8 @@ const PUBLIC_KEY_CREDENTIAL_PARAMETERS = [
 let credentialResult = {};
 let assertionResult = {};
 const setTableCellJson = (id, data) => {
-    document.querySelector(`#${id}`).innerHTML = '<pre>' + JSON.stringify(data, undefined, 2) + '</pre>';
+    // document.querySelector(`#${id}`).innerHTML = '<pre>' + JSON.stringify(data, undefined, 2) + '</pre>';
+    jsonview.renderJSON(data, document.querySelector(`#${id}`));
 }
 const getRelyingParty = () => {
     return {
@@ -179,7 +180,7 @@ const init = () => {
 
 const displayPopulatedRows = () => {
     [...document.querySelector("#table").children[1].children].forEach(tr => {
-        if (!tr.children[1].innerHTML)
+        if (tr.children[1].innerHTML === '')
             tr.style.display = "none";
     });
     document.querySelector("#table").style.display = "block";
