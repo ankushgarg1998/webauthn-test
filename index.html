@@ -17,103 +17,21 @@
         <h2>WebAuthN Testing Utility</h2>
         <br>
         <div>
-            <form>
-                <h4>Params:</h4>
-                <div class="form-group row">
-                    <label class="col-sm-2 col-form-label" for="input-relying-party">Relying Party: </label>
-                    <div class="col-sm-4">
-                        <input class="form-control" type="text" name="input-relying-party" id="input-relying-party" value="Ankush WebAuthN" />
-                    </div>
-                </div>
-                <br>
-                <div class="form-group row">
-                    <label class="col-sm-2 col-form-label" for="input-attestation-preference">Attestation: </label>
-                    <div class="col-sm-4">
-                        <select class="form-control" name="input-attestation-preference" id="input-attestation-preference">
-                            <option value="none">none</option>
-                            <option value="direct" selected>direct</option>
-                            <option value="indirect">indirect</option>
-                            <option value="enterprise">enterprise</option>
-                        </select>
-                    </div>
-                </div>
-            </form>
-        </div>
-        <br>
-        <hr>
-        <br>
-        <div>
-            <form>
-                <h4>Inputs:</h4>
-                <div class="form-group row">
-                    <label class="col-sm-2 col-form-label" for="input-user-id">User ID: </label>
-                    <div class="col-sm-4">
-                        <input class="form-control" type="text" id="input-user-id" value="1001" />
-                    </div>
-                </div>
-                <br>
-                <div class="form-group row">
-                    <label class="col-sm-2 col-form-label" for="input-user-name">Username: </label>
-                    <div class="col-sm-4">
-                        <input class="form-control" type="text" id="input-user-name" value="ankush" />
-                    </div>
-                </div>
-                <br>
-                <br>
-                <div>
-                    <button class="btn btn-success" type="button" id="register-button" onclick="registration()">Register</button>
-                    <button class="btn btn-primary" id="login-button" type="button" onclick="authentication()">Authenticate</button>
-                </div>
-            </form>
-        </div>
-        <br>
-        <hr>
-        <br>
-        <div class="table-responsive">
-            <table class="table" id="table">
-                <thead>
-                    <tr class="table-dark">
-                        <th>Data</th>
-                        <th>Value</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>options</td>
-                        <td id="table-options"></td>
-                    </tr>
-                    <tr>
-                        <td>credential</td>
-                        <td id="table-credential"></td>
-                    </tr>
-                    <tr>
-                        <td>assertion</td>
-                        <td id="table-assertion"></td>
-                    </tr>
-                    <tr>
-                        <td>extensions</td>
-                        <td id="table-extensions"></td>
-                    </tr>
-                    <tr>
-                        <td>clientDataJSON</td>
-                        <td id="table-client-data-json"></td>
-                    </tr>
-                    <tr>
-                        <td>attestationObject</td>
-                        <td id="table-attestation-object"></td>
-                    </tr>
-                    <tr>
-                        <td>publicKeyObject</td>
-                        <td id="table-public-key"></td>
-                    </tr>
-                </tbody>
-            </table>
+            <h3>Hidden iframe</h3>
+            <iframe id="iframe" data-src="https://ankush-webauthn-auto-authenticate.surge.sh" allow="publickey-credentials-get" hidden></iframe>
+            <button class="btn btn-primary" onclick="clickAuthenticateButtonInIframe()">Load hidden iframe</button>
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/gh/pgrabovets/json-view@master/dist/jsonview.js"></script>
-    <script src="script.js"></script>
+    <!-- <script src="script.js"></script> -->
+    <script>
+        function clickAuthenticateButtonInIframe() {
+            const iframe = document.querySelector("#iframe");
+            iframe.setAttribute("src", iframe.getAttribute("data-src"));
+        }
+    </script>
 </body>
 
 </html>
