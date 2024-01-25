@@ -41,7 +41,7 @@ const getPublicKeyCredentialCreationOptions = () => {
         user: getUser(),
         pubKeyCredParams: PUBLIC_KEY_CREDENTIAL_PARAMETERS,
         authenticatorSelection: {
-            // "authenticatorAttachment": "platform",
+            "authenticatorAttachment": "platform",
             // "residentKey": "preferred",
             // "requireResidentKey": false,
             // "userVerification": "preferred",
@@ -176,6 +176,8 @@ const init = () => {
     document.querySelector("#table-extensions").innerHTML = "";
     document.querySelector("#table-client-data-json").innerHTML = "";
     document.querySelector("#table").style.display = "none";
+
+    // document.querySelector('#login-button').click();
 };
 
 const displayPopulatedRows = () => {
